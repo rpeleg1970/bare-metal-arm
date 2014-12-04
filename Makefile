@@ -27,9 +27,10 @@ main: main.elf
 	dd if=/dev/zero of=flash.bin bs=4096 count=4096
 	dd if=main.bin of=flash.bin bs=4096 conv=notrunc
 
-main.elf: startup.o
-	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf startup.o main.c
+main.elf: *.o
+	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o main.c
 
-startup.o:
+*.o:
 	$(AS) $(ASFLAGS) -o startup.o startup.S
+	$(AS) $(ASFLAGS) -o uart.o uart.S
 
