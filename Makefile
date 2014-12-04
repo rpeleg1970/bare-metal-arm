@@ -1,32 +1,35 @@
 # makefile for add
 AS=arm-none-eabi-as
 LD=arm-none-eabi-ld
+GCC=arm-none-eabi-gcc
 OC=arm-none-eabi-objcopy
 GDB=arm-none-eabi-gdb
 QEMU=qemu-system-arm
 
 ASFLAGS=--gstabs+
-LDFLAGS=-T add.ld
+LDFLAGS=-T connex.ld
+GCCFLAGS=-nostdlib -g
 OCFLAGS=-O binary
 
-all: add
+all: main
 
 clean:
-	rm add.bin add.o add.elf flash.bin
+	rm *.o *.bin *.elf
 
 dbg-server:
 	$(QEMU) -M connex -nographic -pflash flash.bin -gdb tcp::1234 -S
 
 dbg-client:
-	$(GDB) add.elf
+	$(GDB) *.elf
 
-add: add.elf
-	$(OC) $(OCFLAGS) add.elf add.bin
+main: main.elf
+	$(OC) $(OCFLAGS) main.elf main.bin
 	dd if=/dev/zero of=flash.bin bs=4096 count=4096
-	dd if=add.bin of=flash.bin bs=4096 conv=notrunc
+	dd if=main.bin of=flash.bin bs=4096 conv=notrunc
 
-add.elf: add.o
-	$(LD) $(LDFLAGS) -o add.elf add.o
+main.elf: startup.o
+	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf startup.o main.c
 
-add.o:
-	$(AS) $(ASFLAGS) -o add.o add.S
+startup.o:
+	$(AS) $(ASFLAGS) -o startup.o startup.S
+
