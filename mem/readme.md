@@ -6,14 +6,14 @@ implement basic heap management: malloc, free, later on realloc. Some points:
 
 Managing the remaining memory is done along the following guidelines:
 - we do not have an OS and VMM so newly allocated memory is taken starting from
-  the heap base, and going up. A single pointer tracks the next location
+  the heap base, and going up. A single pointer tracks the next location, which we will call 'uncharted'
 - Allocating new memory is aligned to (configurable) 16 bytes
 - Freed blocks are tracked in the following manner:
   - We keep a red-black tree for tracking blocks by size. Algorithm is derived
     from http://eternallyconfuzzled.com/tuts/datastructures/jsw_tut_rbtree.aspx
   - each node contains a linked list of memory chunks of the same (aligned) size
   - When malloc is called, we first look for a best fit (TBD how much bigger we
-    are willing to provide) in the free list. If we do not find - we allocate from the next uncharted see above. If we do find, we take the first free block in the list and return it.
+    are willing to provide) in the free list. If we do not find - we allocate from the next uncharted (see above). If we do find, we take the first free block in the list and return it.
   - if the list for a specific size goes down to 0 - we also remove the RB tree node
 
 
