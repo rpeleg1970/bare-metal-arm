@@ -24,4 +24,11 @@ SECTIONS
   }
   ebss = .;
   bss_size = ebss - sbss;
+
+  . = 0xA0100000;
+  stack_base = .;
+  heap_start = .;
+
+  . = 0xA4000000;
+  ram_end = .;
 }

@@ -41,8 +41,8 @@ zero:
         bne zero
 
 init_stack:
-        @@ place the stack at the top of the connex RAM, see also .ld file
-        ldr sp, =0xA4000000
+        @@ place the stack at the bottom of RAM, currently 1MB from bottom see also .ld file
+        ldr sp, =stack_base
 
         @@ done - branch to main
         bl  main
