@@ -8,6 +8,7 @@ Managing the remaining memory is done along the following guidelines:
 - we do not have an OS and VMM so newly allocated memory is taken starting from
   the heap base, and going up. A single pointer tracks the next location, which we will call 'uncharted'
 - Allocating new memory is aligned to (configurable) 16 bytes
+  - every allocated chunk has at least the size (4 bytes in this architecture) attached below the first chunk byte. So this should be considered in the overall size (so up to 12 bytes we still allocate a 16 byte chunk)
 - Freed blocks are tracked in the following manner:
   - We keep a red-black tree for tracking blocks by size. Algorithm is derived
     from http://eternallyconfuzzled.com/tuts/datastructures/jsw_tut_rbtree.aspx
@@ -21,9 +22,12 @@ Now the above algorithm needs to be handled without the overhead of keeping a se
 This is done as follows:
 - each freed block is at least 16 bytes - so we can use the first few bytes in
   it, and erase them when we provide the block via malloc
-- If the block is the first of its size in the tree, the first 4 bytes are
-  dedicated to the RB tree node info: size, left-ptr, right-ptr, and color. The fifth byte is a pointer to the next node that will come in, initially points to NULL.
-- When any additional chunck comes in - we copy the rb-node pointer to its first
-  byte, and correct the rb-pointer to point to it. This effectively pushes the new chunk in o(1) into the list (adds to the o(log(n)) of rb tree traversal)
+- If the chunk is the first of its size in the tree, we arrange the data in it as follows:
+  - 4 bytes size (already there, from malloc)
+  - 4 bytes pointer to next chunk (linked list ptr)
+  - 4 bytes left ptr
+  - 4 bytes right ptr
+  - We also need a color bit, which we cannot fit if the chunk was 16 bytes. HOWEVER - since the the size is aligned to 16 bytes, we can use any of the 4 LSB in the LS byte (first byte of chunk, as connex is little-endian)
+- When any additional chunck comes in (same size) - we copy the 'next' pointer from the RB node to its 'next' pointer (bytes 5-8), and correct the RB node 'next' pointer to point to it. This effectively pushes the new chunk in o(1) into the list (adds to the o(log(n)) of rb tree traversal)
 - to remove a chunck for malloc we perform the reverse, and when we get to the point
   where the list is empty except the rb node - we remove it from the tree completely, erase the info and pointers, and return it.
