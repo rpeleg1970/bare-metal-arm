@@ -1,5 +1,5 @@
 implement basic heap management: malloc, free, later on realloc. Some points:
-- the CPU does not support protected mode - so all memory is access in real mode
+- the CPU does not support protected mode - so all memory is accessed in real mode
 - Connect board RAM is 0xA0000000 to 0xA3FFFFFF (64MB). Part is allocated for
   stack and static variables (see starup.S), the rest is managed here.
 
@@ -8,7 +8,7 @@ Managing the remaining memory is done along the following guidelines:
 - we do not have an OS and VMM so newly allocated memory is taken starting from
   the heap base, and going up. A single pointer tracks the next location, which we will call 'uncharted'
 - Allocating new memory is aligned to (configurable) 16 bytes
-  - every allocated chunk has at least the size (4 bytes in this architecture) attached below the first chunk byte. So this should be considered in the overall size (so up to 12 bytes we still allocate a 16 byte chunk)
+  - every allocated chunk has at least the size (4 bytes in this architecture) attached below the first usable chunk byte. So this should be considered in the overall size (so up to 12 bytes we still allocate a 16 byte chunk)
 - Freed blocks are tracked in the following manner:
   - We keep a red-black tree for tracking blocks by size. Algorithm is derived
     from http://eternallyconfuzzled.com/tuts/datastructures/jsw_tut_rbtree.aspx
