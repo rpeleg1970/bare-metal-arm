@@ -8,7 +8,7 @@ QEMU=qemu-system-arm
 
 ASFLAGS=--gstabs+
 LDFLAGS=-T connex.ld
-GCCFLAGS=-nostdlib -g
+GCCFLAGS=-nostdlib -g -I.
 OCFLAGS=-O binary
 
 all: main
@@ -28,7 +28,7 @@ main: main.elf
 	dd if=main.bin of=flash.bin bs=4096 conv=notrunc
 
 main.elf: *.o
-	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o *.c mem/*.c
+	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o *.c mem/*.c ds/*.c
 
 
 *.o:

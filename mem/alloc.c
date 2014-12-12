@@ -1,12 +1,15 @@
 #include "alloc.h"
+#include "ds/rb_tree.h"
 
 /* defined in linker script, actually located in heap-start and ram-end */
 extern unsigned int heap_start;
 extern unsigned int ram_end;
 static unsigned int align = 16; /* must be a power of 2 see malloc */
 
+// we build the struct so that it aligns with the rbt_node first 8 bytes
 typedef struct {
-  size_t size;
+  size_t size : 31;
+  unsigned int reserved1 : 1;
   void* next; /* this one either points to the next free, or is the address returned to the caller */
 } chunk_t;
 
@@ -18,6 +21,9 @@ void *malloc(size_t nbytes)
   void *ret = NULL;
   chunk_t* prev_iter = &free_list;
   chunk_t* iter = free_list.next;
+
+  if(nbytes & 0x80000000)
+    return NULL; /* too big anyway, but also avoid values over 31 bits see chunk_t */
 
   /* align nbytes, making sure we also add 4 bytes for chunk size info
    * we assume 'align' is a power of 2 so the affect of adding (align-1) and
