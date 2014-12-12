@@ -14,7 +14,7 @@
  * - A node contains the key which is the sorting value, but also needs
  *   a payload which will be a pointer to something (e.g. next block in free
  *   list).
- * - As I wnated the node to fit in the minimal block malloc provides, the node
+ * - As I wanted rbt_node to fit in the minimal block malloc provides, the node
  *   is limited to 16 bytes. This means that we need to find room for the color
  *   indicator. So by design I limited the value of 'key' to the first 31 bits,
  *   and use the MSB as a color indicator. An alternative could be allowing the
