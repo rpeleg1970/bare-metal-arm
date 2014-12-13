@@ -28,9 +28,9 @@ main: main.elf
 	dd if=main.bin of=flash.bin bs=4096 conv=notrunc
 
 main.elf: *.o
-	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o *.c mem/*.c ds/*.c
+	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o *.c mem/*.c ds/*.c io/*.c
 
 
 *.o:
 	$(AS) $(ASFLAGS) -o startup.o startup.S
-	$(AS) $(ASFLAGS) -o uart.o uart.S
+	$(AS) $(ASFLAGS) -o uart.o io/uart.S

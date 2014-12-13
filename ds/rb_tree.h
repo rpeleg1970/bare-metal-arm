@@ -22,9 +22,11 @@
  *   more), as well as pass getter/setter for color and 'key'.
  * - Also placing the 'key'/color values  in the first 4 bytes,
  *   payload in the next 4 bytes, to match the free list node structure.
- * - Last - the find function allows us to return the next GT or next LT if EQ
+ * - The find function allows us to return the next GT or next LT if EQ
  *   was not found. An example is our malloc usage - get the next chunk
  *   size if exact match was not found.
+ * - The insert function receives a make_node() function pointer to allow the
+ *   caller to control how nodes are created. Again - useful for malloc impl.
  */
 
 #include "mem/alloc.h"
@@ -36,9 +38,9 @@ typedef struct rbt_node {
   struct rbt_node *link[2];
 } rbt_node;
 
-typedef struct rbt_tree {
+typedef struct rb_tree {
   rbt_node *root;
-} rbt_tree;
+} rb_tree;
 
 #define RBT_LTEQ -1
 #define RBT_EQ 0
@@ -46,4 +48,5 @@ typedef struct rbt_tree {
 rbt_node *find_ex(rbt_node* root,unsigned int key, int op); 
 rbt_node *find(rbt_node* root, unsigned int key);
 
+rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned int key );
 #endif
