@@ -135,6 +135,81 @@ rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned 
   return retval;
 }
 
+int remove ( rb_tree *tree, void(*free_node)(rbt_node*), unsigned int key )
+{
+  rbt_node *f = NULL;  /* Found item */
+  if ( tree->root != NULL ) {
+    rbt_node head = {0}; /* False tree root */
+    rbt_node *q, *p, *g; /* Helpers */
+    int dir = 1;
+
+    /* Set up helpers */
+    q = &head;
+    g = p = NULL;
+    q->link[1] = tree->root;
+
+    /* Search and push a red down */
+    while ( q->link[dir] != NULL ) {
+      int last = dir;
+
+      /* Update helpers */
+      g = p, p = q;
+      q = q->link[dir];
+      dir = q->key < key;
+
+      /* Save found node */
+      if ( q->key == key )
+        f = q;
+
+      /* Push the red node down */
+      if ( !is_red ( q ) && !is_red ( q->link[dir] ) ) {
+        if ( is_red ( q->link[!dir] ) )
+          p = p->link[last] = rotate_single ( q, dir );
+        else if ( !is_red ( q->link[!dir] ) ) {
+          rbt_node *s = p->link[!last];
+
+          if ( s != NULL ) {
+            if ( !is_red ( s->link[!last] ) && !is_red ( s->link[last] ) ) {
+              /* Color flip */
+              p->red = 0;
+              s->red = 1;
+              q->red = 1;
+            }
+            else {
+              int dir2 = g->link[1] == p;
+
+              if ( is_red ( s->link[last] ) )
+                g->link[dir2] = rotate_double ( p, last );
+              else if ( is_red ( s->link[!last] ) )
+                g->link[dir2] = rotate_single ( p, last );
+
+              /* Ensure correct coloring */
+              q->red = g->link[dir2]->red = 1;
+              g->link[dir2]->link[0]->red = 0;
+              g->link[dir2]->link[1]->red = 0;
+            }
+          }
+        }
+      }
+    }
+
+    /* Replace and remove if found */
+    if ( f != NULL ) {
+      f->key = q->key;
+      p->link[p->link[1] == q] =
+        q->link[q->link[0] == NULL];
+      (*free_node)(q);
+    }
+
+    /* Update root and make it black */
+    tree->root = head.link[1];
+    if ( tree->root != NULL )
+      tree->root->red = 0;
+  }
+
+  return 1;
+}
+
 /*
  * Testing and dump functions from here below
  */
@@ -185,6 +260,11 @@ rbt_node *new_node(unsigned int key)
   return retval;
 }
 
+void free_node(rbt_node *node)
+{
+  free(node);
+}
+
 void rbt_test()
 {
   rb_tree tree;
@@ -193,6 +273,8 @@ void rbt_test()
 
   for(i=0; i<32; i++)
     insert(&tree,&new_node,i);
+  for(i=0; i<32; i+=2)
+    remove(&tree,&free_node,i);
 
   dump_dot(&tree);
 }
