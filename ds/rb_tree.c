@@ -8,6 +8,7 @@
  */
 
 #include "rb_tree.h"
+#include "io/stdio.h"
 
 int is_red(rbt_node *node)
 {
@@ -133,3 +134,66 @@ rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned 
 
   return retval;
 }
+
+/*
+ * Testing and dump functions from here below
+ */
+void dump_node_dot(rbt_node *node, rbt_node *parent)
+{
+    /* dump self */
+    _uart0_prints("\tnode [style=filled fillcolor=");
+    _uart0_prints(node->red ? "red]; \"" : "black]; \"");
+    _uart0_printi(node->key);
+    _uart0_prints("\"\n");
+
+    /* edge from parent to self */
+    if(parent)
+    {
+      _uart0_prints("\t\"");
+      _uart0_printi(parent->key);
+      _uart0_prints("\" -> \"");
+      _uart0_printi(node->key);
+      _uart0_prints("\"\n");
+    }
+
+    /* recurse */
+    if(node->link[0])
+      dump_node_dot(node->link[0],node);
+    if(node->link[1])
+      dump_node_dot(node->link[1],node);
+
+}
+
+void dump_dot(rb_tree *tree)
+{
+  _uart0_prints("digraph BST {\n");
+  _uart0_prints("\tnode [fontsize=11 fontcolor=white; fontname=Helvetica];\n");
+  _uart0_prints("\tedge [arrowhead=vee];\n");
+
+  if(tree->root)
+    dump_node_dot(tree->root, NULL);
+
+  _uart0_prints("}");
+}
+
+rbt_node *new_node(unsigned int key)
+{
+  rbt_node* retval = (rbt_node*)malloc(sizeof(rbt_node*));
+  retval->key = key;
+  retval->red = 1;
+  retval->link[0] = retval->link[1] = NULL;
+  return retval;
+}
+
+void rbt_test()
+{
+  rb_tree tree;
+  unsigned int i = 0;
+  tree.root = NULL;
+
+  for(i=0; i<32; i++)
+    insert(&tree,&new_node,i);
+
+  dump_dot(&tree);
+}
+

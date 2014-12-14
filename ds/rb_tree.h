@@ -49,4 +49,8 @@ rbt_node *find_ex(rbt_node* root,unsigned int key, int op);
 rbt_node *find(rbt_node* root, unsigned int key);
 
 rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned int key );
+
+
+void dump_dot(rb_tree *tree);
+void rbt_test();
 #endif

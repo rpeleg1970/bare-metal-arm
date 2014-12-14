@@ -1,5 +1,6 @@
 #include "mem/alloc.h"
 #include "io/stdio.h"
+#include "ds/rb_tree.h"
 
 static int ssize; /* goes into .bss */
 static char message[] = "size of hello string is: ";
@@ -46,6 +47,8 @@ int main()
     _uart0_printx((unsigned int)p[i]);
     _uart0_prints(nl);
   }
+
+  rbt_test();
 
   _uart0_prints("bye.");
 }
