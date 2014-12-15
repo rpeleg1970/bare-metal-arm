@@ -31,7 +31,7 @@ the malloc implementation:
 Two more additional functions are provided: `test()` and `dump_dot()`. The latter provides a graphviz `DOT` dump to stdout,
 so you can copy this dump into a `.dot` file and execute e.g. `dot -Tpng test.dot > test.png` 
 
-Following is an example run of rb_tree/test():
+Following is an example run of `rb_tree/test()`, output processed to `PNG`:
 
 ![alt text](https://raw.githubusercontent.com/rpeleg1970/bare-metal-arm/rbt-mallloc/ds/images/rb.png
  "test run, rb_tree")
