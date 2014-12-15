@@ -3,8 +3,6 @@ implement basic heap management: malloc, free, later on realloc. Some points:
 - Connect board RAM is 0xA0000000 to 0xA3FFFFFF (64MB). Part is allocated for
   stack and static variables (see starup.S), the rest is managed here.
 
-NOTE current implementation uses a linked list, first fit just to get started working. the below is an optimization of it.
-
 Managing the remaining memory is done along the following guidelines:
 - we do not have an OS and VMM so newly allocated memory is taken starting from
   the heap base, and going up. A single pointer tracks the next location, which we will call 'uncharted'
