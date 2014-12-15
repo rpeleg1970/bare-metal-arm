@@ -13,7 +13,6 @@ typedef struct chunk_t {
   struct chunk_t* next; /* this one either points to the next free, or is the address returned to the caller */
 } chunk_t;
 
-static chunk_t free_list = {.size = 0L, .next = NULL};
 static rb_tree free_chunks = {.root = NULL};
 static chunk_t *free_ptr; /* last freed chunk */
 
