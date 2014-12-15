@@ -241,7 +241,7 @@ void dump_node_dot(rbt_node *node, rbt_node *parent)
 
 void dump_dot(rb_tree *tree)
 {
-  _uart0_prints("digraph BST {\n");
+  _uart0_prints("digraph RBT {\n");
   _uart0_prints("\tnode [fontsize=11 fontcolor=white; fontname=Helvetica];\n");
   _uart0_prints("\tedge [arrowhead=vee];\n");
 

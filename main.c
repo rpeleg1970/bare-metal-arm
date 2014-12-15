@@ -40,6 +40,7 @@ int main()
 
   for(i=0; i<4; i++)
     free(p[i]);
+  dump_mem_dot();
 
   for(i=0; i<4; i++)
   {
@@ -47,6 +48,7 @@ int main()
     _uart0_printx((unsigned int)p[i]);
     _uart0_prints(nl);
   }
+  dump_mem_dot();
 
   rbt_test();
 

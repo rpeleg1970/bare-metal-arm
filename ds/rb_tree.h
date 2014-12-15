@@ -6,7 +6,7 @@
  * http://eternallyconfuzzled.com/tuts/datastructures/jsw_tut_rbtree.aspx.
  * JSW RB tree benefits: 
  * - Insertion/deleion is top down and hence recursion-less. 
- * - The code is more compact due to decoded direction, which allows the same code to
+ * - The code is more compact due to encoded direction, which allows the same code to
  *   handle symetric cases on left and right.
  *
  * Differences implemented here, keeping in mind this is mostly developed for
