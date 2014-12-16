@@ -40,7 +40,7 @@ void *malloc(size_t nbytes)
     return NULL; /* too big anyway, but also avoid values over 31 bits see chunk_t */
 
   /* first look for the nearest available node */
-  node = find_ex(free_chunks.root,nbytes,RBT_GTEQ);
+  node = rbt_find_ex(free_chunks.root,nbytes,RBT_GTEQ);
   if(node)
   {
     clist = (chunk_t*)node;
@@ -51,7 +51,7 @@ void *malloc(size_t nbytes)
     } else {
       /* last one from this size, remove from rb_tree */
       ret = clist;
-      remove(&free_chunks,&dealloc_freelist_node,node->key);
+      rbt_remove(&free_chunks,&dealloc_freelist_node,node->key);
     }
     ret->next = NULL;
     ret = (void*)&ret->next; /* make sure we retun the ptr above the 'size' */
@@ -84,10 +84,10 @@ rbt_node *alloc_freelist_node(unsigned int key)
 void free(void *ptr)
 {
   free_ptr = (chunk_t*)(ptr-sizeof(size_t));
-  rbt_node *node = find(free_chunks.root,free_ptr->size);
+  rbt_node *node = rbt_find(free_chunks.root,free_ptr->size);
   if(!node) /* this chunk's size is not yet in RB tree */
   {
-    node = insert(&free_chunks,&alloc_freelist_node,free_ptr->size);
+    node = rbt_insert(&free_chunks,&alloc_freelist_node,free_ptr->size);
     ((chunk_t*)node)->next = NULL;
     /* this is enough, the node is also the first of the free chunk list for
      * this size */
@@ -114,7 +114,11 @@ void *realloc(void *ptr, size_t size)
   return NULL;
 }
 
-void dump_mem_dot()
+/*
+ * Testing and mem dump functions
+ */
+void mem_dump_dot()
 {
-  dump_dot(&free_chunks);
+  rbt_dump_dot(&free_chunks);
 }
+

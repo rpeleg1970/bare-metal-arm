@@ -45,13 +45,13 @@ typedef struct rb_tree {
 #define RBT_LTEQ -1
 #define RBT_EQ 0
 #define RBT_GTEQ 1
-rbt_node *find_ex(rbt_node* root,unsigned int key, int op); 
-rbt_node *find(rbt_node* root, unsigned int key);
+rbt_node *rbt_find_ex(rbt_node* root,unsigned int key, int op); 
+rbt_node *rbt_find(rbt_node* root, unsigned int key);
 
-rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned int key );
-int remove ( rb_tree *tree, void(*free_node)(rbt_node*), unsigned int key );
+rbt_node *rbt_insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned int key );
+int rbt_remove ( rb_tree *tree, void(*free_node)(rbt_node*), unsigned int key );
 
 
-void dump_dot(rb_tree *tree);
+void rbt_dump_dot(rb_tree *tree);
 void rbt_test();
 #endif

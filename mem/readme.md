@@ -31,3 +31,9 @@ This is done as follows:
 - When any additional chunck comes in (same size) - we copy the 'next' pointer from the RB node to its 'next' pointer (bytes 5-8), and correct the RB node 'next' pointer to point to it. This effectively pushes the new chunk in o(1) into the list (adds to the o(log(n)) of rb tree traversal)
 - to remove a chunck for malloc we perform the reverse, and when we get to the point
   where the list is empty except the rb node - we remove it from the tree completely, erase the info and pointers, and return it.
+
+Running test_mem() allocates a list of growing memory chunks, frees half of them, then allocates again.  The second run finds some of the chunks in the lists, but since only half is there will use bigger chunks. Eventually it will create new chunks from the uncharted area.
+Here is a dump of the tree after the `free()` run:
+
+![alt text](https://raw.githubusercontent.com/rpeleg1970/bare-metal-arm/rbt-mallloc/mem/images/mem.png
+ "test run, free tree dump. each node contains a linked list of free chunks")

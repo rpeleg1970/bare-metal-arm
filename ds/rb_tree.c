@@ -36,7 +36,7 @@ rbt_node * rotate_double(rbt_node *root, int dir)
   return rotate_single(root,dir);
 } 
 
-rbt_node *find_ex(rbt_node* root,unsigned int key, int op)
+rbt_node *rbt_find_ex(rbt_node* root,unsigned int key, int op)
 {
   rbt_node *ret = NULL;
 
@@ -45,7 +45,7 @@ rbt_node *find_ex(rbt_node* root,unsigned int key, int op)
       return root;
 
     int dir = key > root->key;
-    ret = find_ex(root->link[dir],key,op);
+    ret = rbt_find_ex(root->link[dir],key,op);
 
     if(!ret && op!=RBT_EQ) 
     {
@@ -58,12 +58,12 @@ rbt_node *find_ex(rbt_node* root,unsigned int key, int op)
   return ret;
 }
 
-rbt_node *find(rbt_node* root, unsigned int key)
+rbt_node *rbt_find(rbt_node* root, unsigned int key)
 {
-  return find_ex(root,key,RBT_EQ);
+  return rbt_find_ex(root,key,RBT_EQ);
 }
 
-rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned int key )
+rbt_node *rbt_insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned int key )
 {
   rbt_node *retval = NULL;
   if ( tree->root == NULL ) {
@@ -135,7 +135,7 @@ rbt_node *insert ( rb_tree *tree, rbt_node*(*make_node)(unsigned int), unsigned 
   return retval;
 }
 
-int remove ( rb_tree *tree, void(*free_node)(rbt_node*), unsigned int key )
+int rbt_remove ( rb_tree *tree, void(*free_node)(rbt_node*), unsigned int key )
 {
   rbt_node *f = NULL;  /* Found item */
   if ( tree->root != NULL ) {
@@ -239,7 +239,7 @@ void dump_node_dot(rbt_node *node, rbt_node *parent)
 
 }
 
-void dump_dot(rb_tree *tree)
+void rbt_dump_dot(rb_tree *tree)
 {
   _uart0_prints("digraph RBT {\n");
   _uart0_prints("\tnode [fontsize=11 fontcolor=white; fontname=Helvetica];\n");
@@ -248,10 +248,10 @@ void dump_dot(rb_tree *tree)
   if(tree->root)
     dump_node_dot(tree->root, NULL);
 
-  _uart0_prints("}");
+  _uart0_prints("}\n");
 }
 
-rbt_node *new_node(unsigned int key)
+rbt_node *rbt_new_node(unsigned int key)
 {
   rbt_node* retval = (rbt_node*)malloc(sizeof(rbt_node*));
   retval->key = key;
@@ -260,7 +260,7 @@ rbt_node *new_node(unsigned int key)
   return retval;
 }
 
-void free_node(rbt_node *node)
+void rbt_free_node(rbt_node *node)
 {
   free(node);
 }
@@ -272,10 +272,10 @@ void rbt_test()
   tree.root = NULL;
 
   for(i=0; i<32; i++)
-    insert(&tree,&new_node,i);
+    rbt_insert(&tree,&rbt_new_node,i);
   for(i=0; i<32; i+=2)
-    remove(&tree,&free_node,i);
+    rbt_remove(&tree,&rbt_free_node,i);
 
-  dump_dot(&tree);
+  rbt_dump_dot(&tree);
 }
 
