@@ -34,5 +34,5 @@ so you can copy this dump into a `.dot` file and execute e.g. `dot -Tpng test.do
 
 Following is an example run of `rb_tree/test()`, output processed to `PNG`:
 
-![alt text](https://raw.githubusercontent.com/rpeleg1970/bare-metal-arm/rbt-mallloc/ds/images/rb.png
+![alt text](https://raw.githubusercontent.com/rpeleg1970/bare-metal-arm/master/ds/images/rb.png
  "test run, rb_tree")

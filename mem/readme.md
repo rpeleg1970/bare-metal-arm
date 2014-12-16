@@ -35,5 +35,5 @@ This is done as follows:
 Running test_mem() allocates a list of growing memory chunks, frees half of them, then allocates again.  The second run finds some of the chunks in the lists, but since only half is there will use bigger chunks. Eventually it will create new chunks from the uncharted area.
 Here is a dump of the tree after the `free()` run:
 
-![alt text](https://raw.githubusercontent.com/rpeleg1970/bare-metal-arm/rbt-mallloc/mem/images/mem.png
+![alt text](https://raw.githubusercontent.com/rpeleg1970/bare-metal-arm/master/mem/images/mem.png
  "test run, free tree dump. each node contains a linked list of free chunks")
