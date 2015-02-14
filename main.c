@@ -1,6 +1,7 @@
 #include "mem/alloc.h"
 #include "io/stdio.h"
 #include "ds/rb_tree.h"
+#include "hook/hook.h"
 
 static int ssize; /* goes into .bss */
 static char message[] = "size of hello string is: ";
@@ -26,6 +27,9 @@ int main()
 
   mem_test();
   rbt_test();
+  orig_func(2,3);
+  hook(orig_func,hook_func);
+  orig_func(2,3);
 
   _uart0_prints("bye.\n");
 }

@@ -16,6 +16,9 @@ all: main
 clean:
 	rm *.o *.bin *.elf
 
+run:
+	$(QEMU) -M connex -nographic -pflash flash.bin
+
 dbg-server:
 	$(QEMU) -M connex -nographic -pflash flash.bin -gdb tcp::1234 -S
 
@@ -28,9 +31,11 @@ main: main.elf
 	dd if=main.bin of=flash.bin bs=4096 conv=notrunc
 
 main.elf: *.o
-	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o *.c mem/*.c ds/*.c io/*.c
+	$(GCC) $(GCCFLAGS) $(LDFLAGS) -o main.elf *.o *.c mem/*.c ds/*.c io/*.c hook/*.c
 
 
 *.o:
 	$(AS) $(ASFLAGS) -o startup.o startup.S
 	$(AS) $(ASFLAGS) -o uart.o io/uart.S
+	$(AS) $(ASFLAGS) -o trampoline.o hook/trampoline.S
+
