@@ -3,10 +3,13 @@
 #include "ds/rb_tree.h"
 #include "hook/hook.h"
 
+extern void set_neg_value(int *address, int value);
+
 static int ssize; /* goes into .bss */
 static char message[] = "size of hello string is: ";
 static char hello[] = "hello ARM bare-metal C and ASM";
 static char nl[] = "\r\n";
+static int test_value = 10;
 
 
 int _strlen(const char *s)
@@ -30,6 +33,16 @@ int main()
   orig_func(2,3);
   hook(orig_func,hook_func);
   orig_func(2,3);
+
+  _uart0_prints("Original test_value: ");
+  _uart0_printi(test_value);
+  _uart0_prints(nl);
+
+  set_neg_value(&test_value, 5); // Call assembly function
+
+  _uart0_prints("test_value after set_neg_value: ");
+  _uart0_printi(test_value);
+  _uart0_prints(nl);
 
   _uart0_prints("bye.\n");
 }
