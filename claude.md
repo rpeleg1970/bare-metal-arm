@@ -1,0 +1,1 @@
+This repository (`rpeleg1970/bare-metal-arm`) contains a bare-metal ARM project designed to run on QEMU, specifically emulating a Connex/Gumstix board. The project utilizes a C runtime initiation method derived from a tutorial by bravegnu.org, focusing on the GNU toolchain for ARM. It also includes examples and resources for integrating ARM assembly subroutines with C code.
